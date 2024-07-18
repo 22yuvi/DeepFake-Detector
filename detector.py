@@ -330,10 +330,9 @@ def generate_mag_video(vid_path, mag_path):
         print("{} - {} ... ".format(video_dir_name, vidname), end='', flush=True)
         vidpath = vid_path + vidname
         save_vid_path = mag_path + vidname
-        meta_save = mag_path + 'meta/' + vidname
 
-        MagnifyColor(MetaData(file_name=vidpath, low=0.833, high=2, levels=1,
-                    amplification=10,  output_folder=mag_path, target = save_vid_path, mode=Mode.COLOR, suffix='color')).do_magnify()
+        Magnify(MetaData(file_name=vidpath, low=0.833, high=2, levels=1,
+                    amplification=10,  output_folder=mag_path, target = save_vid_path)).do_magnify()
         print("Done")
 
 def calculate_ROI(img, block_h, block_w):
