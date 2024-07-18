@@ -7,7 +7,6 @@ import cv2
 import torch
 import time
 
-import python_eulerian_video_magnification
 from magnify import Magnify
 from metadata import MetaData
 
