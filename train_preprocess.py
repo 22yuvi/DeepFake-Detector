@@ -7,6 +7,22 @@ import cv2
 import torch
 import time
 
+from magnify import Magnify
+from metadata import MetaData
+from detector import *
+
+print("Preparing dlib ... ", end='', flush=True)
+detector = dlib.get_frontal_face_detector()
+predictor_path = '/shape_predictor_81_face_landmarks.dat'
+predictor = dlib.shape_predictor(predictor_path)
+print("Done")
+
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
+print("Preparing MTCNN ... ", end='', flush=True)
+mtcnn = MTCNN(thresholds=[0.3, 0.3, 0.3], margin=20, keep_all=True, post_process=False, select_largest=False, device=torch.device('cuda', 0))
+print("Done")
+
 def generate_align_face(data_path, save_path):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
