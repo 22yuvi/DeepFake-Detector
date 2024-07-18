@@ -9,11 +9,12 @@ import time
 
 from magnify import Magnify
 from metadata import MetaData
-from detector import *
+from utilities import *
+from model_arch import *
 
 print("Preparing dlib ... ", end='', flush=True)
 detector = dlib.get_frontal_face_detector()
-predictor_path = '/shape_predictor_81_face_landmarks.dat'
+predictor_path = 'shape_predictor_81_face_landmarks.dat'
 predictor = dlib.shape_predictor(predictor_path)
 print("Done")
 
@@ -90,4 +91,36 @@ def generate_mmst_map(mag_path, map_path):
     full_st_map = normalization(full_st_map)
     np.save(map_path + ".npy", full_st_map)
 
-  
+def run():
+    generate_align_face(dataset_dir, meta_dir)
+    resize_frame(meta_dir, resize_dir)
+    generate_align_video(resize_dir, newviddir)
+    generate_mag_video(newviddir, mag_path)
+    generate_mmst_map(mag_path, map_path)
+    
+    classifier = MesoInception4()
+    classifier.load('MesoInception_F2F.h5')
+    
+    img_list = os.listdir(resize_dir)
+    if img_list==[]:
+        continue
+    img_list.sort()
+    data_Meso = np.ones(300) * 0.5
+    try:
+        for img_name in img_list:
+            if int(img_name[:-4]) >= 300:
+                continue
+            img_path = resize_dir +'/'+ img_name
+            img = cv2.resize(cv2.imread(img_path), (256, 256))
+            pred = classifier.predict(np.array([img]))
+            data_Meso[int(img_name[:-4])] = pred
+    except Exception:
+        print("hello")
+        continue
+    
+    data_mit = np.load(map_path)
+    
+    model_path = ""
+    model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer})
+    prediction = model.predict(data_mit, data_Meso)
+    return prediction
