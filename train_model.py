@@ -15,8 +15,8 @@ from keras import backend as K
 from tensorflow.core.protobuf import rewriter_config_pb2
 from keras import initializers
 
-data_path = "/content//"
-save_path = "/content/drive/MyDrive/Model/"
+data_path = ""
+save_path = ""
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 
