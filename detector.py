@@ -8,9 +8,8 @@ import torch
 import time
 
 import python_eulerian_video_magnification
-from python_eulerian_video_magnification.magnifycolor import MagnifyColor
-from python_eulerian_video_magnification.metadata import MetaData
-from python_eulerian_video_magnification.mode import Mode
+from magnify import Magnify
+from metadata import MetaData
 
 print("Preparing dlib ... ", end='', flush=True)
 detector = dlib.get_frontal_face_detector()
