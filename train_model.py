@@ -1,4 +1,19 @@
+import os
+import keras
+import numpy as np
+import tensorflow as tf
+from keras.layers import *
+from keras.optimizers import Adam
+from keras.models import Model, load_model
+from keras.applications.resnet import ResNet50
+from keras.callbacks import ModelCheckpoint
+from keras.callbacks import LambdaCallback
+from sklearn.decomposition import PCA
 from model_arch import *
+
+from keras import backend as K
+from tensorflow.core.protobuf import rewriter_config_pb2
+from keras import initializers
 
 data_path = "/content//"
 save_path = "/content/drive/MyDrive/Model/"
@@ -8,12 +23,10 @@ if not os.path.exists(save_path):
 best_acc = 0
 if __name__=="__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
-
     batch_size = 32
     epochs = 10000
 
     try:
-        # load data
         data_dir = data_path
         mit_list = np.load(data_dir+"mit.npy")
         mit_list = mit_list/255.0
@@ -48,11 +61,8 @@ if __name__=="__main__":
 
     best_acc = 0
     def saveModel(epoch, logs):
-        score, acc = model.evaluate([x_test_mit, x_test_meso], y_test,
-                            batch_size=batch_size)
+        score, acc = model.evaluate([x_test_mit, x_test_meso], y_test, batch_size=batch_size)
         global best_acc
-        # val_acc = logs['val_accuracy']
-        # t_acc = logs['accuracy']
         if acc > best_acc:
             print("Save model, acc=", acc)
             best_acc = acc
