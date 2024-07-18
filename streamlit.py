@@ -76,7 +76,7 @@ if st.button("Predict"):
             col1, col2 = st.columns([0.5, 0.5])
             with col1:
                 st.markdown('<p style="text-align: center;">Video</p>', unsafe_allow_html=True)
-                st.video(temp_file.name)
+                st.video(uploaded_file.name)
     if uploaded_file is not None or link is not None:
         with col2:
             st.markdown('<p style="text-align: center;">Magnified Video</p>', unsafe_allow_html=True)
@@ -84,7 +84,7 @@ if st.button("Predict"):
             fps = video.get(cv2.CAP_PROP_FPS)
             width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            fourcc = cv2.VideoWriter_fourcc(*'DIVX')  # Codec for .mp4 files
+            fourcc = cv2.VideoWriter_fourcc(*'DIVX')
             output_path = os.path.join(working_dir, "target.mp4")
             out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
             for _ in tqdm(range(total_frames), unit='frame', desc="Progress"):
@@ -93,7 +93,11 @@ if st.button("Predict"):
                 if not ret:
                     break
             out.release()
-            run()
+            pred = run()
+            if(pred == 1):
+                st.write('Fake')
+            else:
+                st.write('Real')
             video.release()
 
 
