@@ -8,7 +8,6 @@ import time
 import cv2
 import moviepy.editor as mp
 from PIL import Image
-from streamlit_image_select import image_select
 import glob
 import requests
 from streamlit_lottie import st_lottie
@@ -71,12 +70,14 @@ if st.button("Predict"):
     if uploaded_file is not None:
         file_extension = os.path.splitext(uploaded_file.name)[1].lower()
         if file_extension in ['.mp4', '.avi', '.mov', '.mkv']:
-            audio = mp.AudioFileClip(uploaded_file.name)
-            video = cv2.VideoCapture(uploaded_file.name)
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
+            temp_file.write(uploaded_file.read())
+            audio = mp.AudioFileClip(temp_file.name)
+            video = cv2.VideoCapture(temp_file.name)
             col1, col2 = st.columns([0.5, 0.5])
             with col1:
                 st.markdown('<p style="text-align: center;">Video</p>', unsafe_allow_html=True)
-                st.video(uploaded_file.name)
+                st.video(temp_file.name)
     if uploaded_file is not None or link is not None:
         with col2:
             st.markdown('<p style="text-align: center;">Magnified Video</p>', unsafe_allow_html=True)
