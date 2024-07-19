@@ -19,11 +19,12 @@ resize_dir = os.path.join(working_dir, "resize/")
 newviddir = os.path.join(working_dir, "video.avi")
 mag_path = os.path.join(working_dir, "magnified_video.avi")
 map_path = os.path.join(working_dir, "map")
-model_path = ""
+model_path = "/content/drive/MyDrive/Model/model_Meso.h5"
+predictor_name = 'shape_predictor_81_face_landmarks.dat'
+predictor_path = os.path.join(working_dir, predictor_name)
 
 print("Preparing dlib ... ", end='', flush=True)
 detector = dlib.get_frontal_face_detector()
-predictor_path = 'shape_predictor_81_face_landmarks.dat'
 predictor = dlib.shape_predictor(predictor_path)
 print("Done")
 
