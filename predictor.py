@@ -41,7 +41,7 @@ def generate_align_face(data_path, save_path):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     try:
-        align_face = preprocess_video(vidname[:-4], detector, predictor, mtcnn, data_path, save_path)
+        align_face = preprocess_video('target', detector, predictor, mtcnn, data_path, save_path)
     except:
         print("Error caused !!")
 
@@ -135,6 +135,6 @@ def run() -> int:
         data_mit = np.load(map_path + ".npy")
 
     with st.spinner('Predicting.....'):
-        model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer})
+        model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
         prediction = model.predict([data_mit, data_Meso])
     return prediction
