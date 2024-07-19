@@ -9,7 +9,7 @@ import time
 
 from magnify import Magnify
 from metadata import MetaData
-from detector import *
+from utilities import *
 
 print("Preparing dlib ... ", end='', flush=True)
 detector = dlib.get_frontal_face_detector()
