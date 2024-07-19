@@ -19,7 +19,7 @@ meta_dir = os.path.join(working_dir, "faces/")
 resize_dir = os.path.join(working_dir, "resize/")
 newviddir = os.path.join(working_dir, "video.avi")
 mag_path = os.path.join(working_dir, "magnified_video.avi")
-map_path = os.path.join(working_dir, "map.npy")
+map_path = os.path.join(working_dir, "map")
 model_path = "/content/drive/MyDrive/Model/model_Meso.h5"
 predictor_name = 'shape_predictor_81_face_landmarks.dat'
 predictor_path = os.path.join(working_dir, predictor_name)
@@ -132,7 +132,7 @@ def run() -> int:
         except Exception:
             print("Error in predicting")
             return -1    
-        data_mit = np.load(map_path)
+        data_mit = np.load(map_path + ".npy")
 
     with st.spinner('Predicting.....'):
         model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer})
