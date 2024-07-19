@@ -133,6 +133,8 @@ def run() -> int:
             print("Error in predicting")
             return -1    
         data_mit = np.load(map_path + ".npy")
+        data_mit = np.expand_dims(data_mit, axis=0)
+        data_Meso = np.expand_dims(data_Meso, axis=0)
 
     with st.spinner('Predicting.....'):
         model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
