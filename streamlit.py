@@ -99,7 +99,7 @@ if st.button("Predict"):
             video.release()
         if(pred == -1):
             st.write('Prediction Failed')
-        elif(pred == ):
+        elif(pred > 0.5 ):
             st.write('Fake')
         else:
             st.write('Real')
