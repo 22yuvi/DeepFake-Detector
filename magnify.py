@@ -36,7 +36,6 @@ class Magnify:
         tensor, fps = self.load_video()
         video_tensor = self._magnify_impl(tensor, fps)
         self.save_video(video_tensor)
-        self._data.save_meta_data()
 
     def build_gaussian_pyramid(self, src, level=3):
         s = src.copy()
