@@ -63,6 +63,7 @@ def resize_frame(align_path, resize_path):
         cv2.imwrite(save_img_path, img)
 
     idx = None
+    save_vid_path = resize_path
     imglist = os.listdir(resize_path)
     imglist.sort()
     imglist.append("0300.jpg")
