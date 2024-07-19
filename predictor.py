@@ -12,6 +12,15 @@ from metadata import MetaData
 from utilities import *
 from model_arch import *
 
+working_dir = os.path.dirname(os.path.abspath(__file__))
+dataset_dir = os.path.join(working_dir, "target.mp4")
+meta_dir = os.path.join(working_dir, "faces/")
+resize_dir = os.path.join(working_dir, "resize/")
+newviddir = os.path.join(working_dir, "video.avi")
+mag_path = os.path.join(working_dir, "magnified_video.avi")
+map_path = os.path.join(working_dir, "map")
+model_path = ""
+
 print("Preparing dlib ... ", end='', flush=True)
 detector = dlib.get_frontal_face_detector()
 predictor_path = 'shape_predictor_81_face_landmarks.dat'
@@ -67,7 +76,6 @@ def resize_frame(align_path, resize_path):
                 new_img = save_vid_path + ("%04d.jpg"%i)
                 os.system("cp " + ori_img + " " + new_img)
         idx = int(imgname[:4]) + 1
-    print("Done")
 
 def generate_align_video(video_frame_path, video_store_path):
     os.system("ffmpeg -i {}%04d.jpg {}".format(video_frame_path, video_store_path))
@@ -91,7 +99,7 @@ def generate_mmst_map(mag_path, map_path):
     full_st_map = normalization(full_st_map)
     np.save(map_path + ".npy", full_st_map)
 
-def run():
+def run() -> int:
     generate_align_face(dataset_dir, meta_dir)
     resize_frame(meta_dir, resize_dir)
     generate_align_video(resize_dir, newviddir)
@@ -103,7 +111,7 @@ def run():
     
     img_list = os.listdir(resize_dir)
     if img_list==[]:
-        continue
+        return -1
     img_list.sort()
     data_Meso = np.ones(300) * 0.5
     try:
@@ -115,12 +123,10 @@ def run():
             pred = classifier.predict(np.array([img]))
             data_Meso[int(img_name[:-4])] = pred
     except Exception:
-        print("hello")
-        continue
-    
+        print("Error in predicting")
+        return -1    
     data_mit = np.load(map_path)
     
-    model_path = ""
     model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer})
-    prediction = model.predict(data_mit, data_Meso)
+    prediction = model.predict([data_mit, data_Meso])
     return prediction
