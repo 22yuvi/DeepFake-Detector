@@ -13,6 +13,7 @@ import glob
 import requests
 from streamlit_lottie import st_lottie
 from pytube import YouTube
+from predictor import run
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -50,7 +51,6 @@ with col2:
     """)
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
-output_vid = os.path.join(working_dir, "source-target.mp4")
 
 link = None
 uploaded_file = None
@@ -94,12 +94,13 @@ if st.button("Predict"):
                     break
             out.release()
             pred = run()
-            if(pred == 1):
-                st.write('Fake')
-            else:
-                st.write('Real')
+            mag_path = os.path.join(working_dir, "magnified_video.avi")
+            st.video(mag_path)
             video.release()
-
-
-
-    
+        if(pred == -1):
+            st.write('Prediction Failed')
+        elif(pred == ):
+            st.write('Fake')
+        else:
+            st.write('Real')
+            
