@@ -38,7 +38,7 @@ class Magnify:
         self.save_video(video_tensor)
         self._data.save_meta_data()
 
-    def build_gaussian_pyramid(src, level=3):
+    def build_gaussian_pyramid(self, src, level=3):
         s = src.copy()
         pyramid = [s]
         for i in range(level):
@@ -46,7 +46,7 @@ class Magnify:
             pyramid.append(s)
         return pyramid
 
-    def temporal_ideal_filter(tensor: np.ndarray, low: float, high: float, fps: int, axis: int = 0) -> np.ndarray:
+    def temporal_ideal_filter(self, tensor: np.ndarray, low: float, high: float, fps: int, axis: int = 0) -> np.ndarray:
         fft = fftpack.fft(tensor, axis=axis)
         frequencies = fftpack.fftfreq(tensor.shape[0], d=1.0 / fps)
         bound_low = (np.abs(frequencies - low)).argmin()
@@ -57,10 +57,10 @@ class Magnify:
         iff = fftpack.ifft(fft, axis=axis)
         return np.abs(iff)
     
-    def gaussian_video(video_tensor, levels=3):
+    def gaussian_video(self, video_tensor, levels=3):
         for i in range(0, video_tensor.shape[0]):
             frame = video_tensor[i]
-            pyr = build_gaussian_pyramid(frame, level=levels)
+            pyr = self.build_gaussian_pyramid(frame, level=levels)
             gaussian_frame = pyr[-1]
             if i == 0:
                 vid_data = np.zeros((video_tensor.shape[0], gaussian_frame.shape[0], gaussian_frame.shape[1], 3))
@@ -68,8 +68,8 @@ class Magnify:
         return vid_data
 
     def _magnify_impl(self, tensor: np.ndarray, fps: int) -> np.ndarray:
-        gau_video = gaussian_video(tensor, levels=self._levels)
-        filtered_tensor = temporal_ideal_filter(gau_video, self._low, self._high, fps)
+        gau_video = self.gaussian_video(tensor, levels=self._levels)
+        filtered_tensor = self.temporal_ideal_filter(gau_video, self._low, self._high, fps)
         amplified_video = self._amplify_video(filtered_tensor)
         return self._reconstruct_video(amplified_video, tensor)
 
