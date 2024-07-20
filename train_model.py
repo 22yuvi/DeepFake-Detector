@@ -10,6 +10,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.callbacks import LambdaCallback
 from sklearn.decomposition import PCA
 from model_arch import *
+from random import shuffle
 
 from keras import backend as K
 from tensorflow.core.protobuf import rewriter_config_pb2
@@ -41,10 +42,10 @@ if __name__=="__main__":
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.summary()
 
-    test_num = 50
-    test_st = int((len(y_list)-test_num)/2)
-    test_ed = test_st + test_num
-    test = [i for i in range(test_st, test_ed)]
+    test_num = len(y_list)/20
+    all_data = [i for i in range(len(y_list))]
+    shuffle(all_data)
+    test = all_data[:test_num]
     train = []
     for i in range(len(y_list)):
         if i in test:
