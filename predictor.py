@@ -7,6 +7,7 @@ import cv2
 import torch
 import time
 import streamlit as st
+import urllib
 
 from magnify import Magnify
 from metadata import MetaData
@@ -20,7 +21,7 @@ resize_dir = os.path.join(working_dir, "resize/")
 newviddir = os.path.join(working_dir, "video.avi")
 mag_path = os.path.join(working_dir, "magnified_video.avi")
 map_path = os.path.join(working_dir, "map")
-model_path = "/content/drive/MyDrive/Model/model_Meso.h5"
+model_path = os.path.join(working_dir, "model")
 predictor_name = 'shape_predictor_81_face_landmarks.dat'
 predictor_path = os.path.join(working_dir, predictor_name)
 mesoIncep_name = 'MesoInception_F2F.h5'
@@ -36,6 +37,17 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 print("Preparing MTCNN ... ", end='', flush=True)
 mtcnn = MTCNN(thresholds=[0.3, 0.3, 0.3], margin=20, keep_all=True, post_process=False, select_largest=False, device=torch.device('cuda', 0))
 print("Done")
+
+def conditional_download(download_directory_path: str, urls: List[str]) -> Optional[str]:
+    if not os.path.exists(download_directory_path):
+        os.makedirs(download_directory_path)
+    for url in urls:
+        download_file_path = os.path.join(download_directory_path, os.path.basename(url))
+        if not os.path.exists(download_file_path):
+            request = urllib.request.urlopen(url)  # type: ignore[attr-defined]
+            total = int(request.headers.get('Content-Length', 0))
+            with tqdm(total=total, desc='Downloading', unit='B', unit_scale=True, unit_divisor=1024) as progress:
+                urllib.request.urlretrieve(url, download_file_path, reporthook=lambda count, block_size, total_size: progress.update(block_size))
 
 def generate_align_face(data_path, save_path):
     if not os.path.exists(save_path):
@@ -105,6 +117,8 @@ def generate_mmst_map(mag_path, map_path):
     np.save(map_path + ".npy", full_st_map)
 
 def run() -> int:
+    with st.spinner('Preprocessing......'):
+        conditional_download(model_path, ['https://github.com/22yuvi/DeepFace-Detector/releases/download/v0.2.0-alpha/model_Meso.h5'])
     with st.spinner('Creating MMST Map......'):
         generate_align_face(dataset_dir, meta_dir)
         resize_frame(meta_dir, resize_dir)
@@ -130,7 +144,7 @@ def run() -> int:
                 pred = classifier.predict(np.array([img]))
                 data_Meso[int(img_name[:-4])] = pred
         except Exception:
-            print("Error in predicting")
+            st.write("Error in predicting")
             return -1    
         data_mit = np.load(map_path + ".npy")
         data_mit = np.expand_dims(data_mit, axis=0)
