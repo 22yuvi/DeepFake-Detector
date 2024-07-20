@@ -95,6 +95,11 @@ def resize_frame(align_path, resize_path):
                 new_img = save_vid_path + ("%04d.jpg"%i)
                 os.system("cp " + ori_img + " " + new_img)
         idx = int(imgname[:4]) + 1
+    if idx is not None and idx < 300:
+        for i in range(idx, 300):
+            ori_img = save_vid_path + ("%04d.jpg"%(idx-1))
+            new_img = save_vid_path + ("%04d.jpg"%i)
+            os.system("cp " + ori_img + " " + new_img)
 
 def generate_align_video(video_frame_path, video_store_path):
     os.system("ffmpeg -i {}%04d.jpg {}".format(video_frame_path, video_store_path))
