@@ -14,7 +14,6 @@ from keras import backend as K
 from tensorflow.core.protobuf import rewriter_config_pb2
 from keras import initializers
 
-from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model as KerasModel
 from keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Dropout, Reshape, Concatenate, LeakyReLU
 
