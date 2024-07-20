@@ -8,7 +8,7 @@ import torch
 import time
 import streamlit as st
 import urllib
-from typing import List
+from typing import List, Optional
 
 from magnify import Magnify
 from metadata import MetaData
