@@ -2,27 +2,31 @@ import os
 import numpy as np
 from model_arch import *
 
-classifier = MesoInception4()
-classifier.load('/content/drive/MyDrive/DeepFakeDetection/MesoInception_F2F.h5')
-
 real_video_dir = "/content/drive/MyDrive/DeepFakeDetection/video/real/"
+fake_video_dir = "/content/drive/MyDrive/DeepFakeDetection/video/fake/"
+fake_mit_dir = "/content/drive/MyDrive/DeepFakeDetection/video/fake/"
+fake_map_dir = "/content/drive/MyDrive/DeepFakeDetection/map/fake/"
+real_mit_dir = "/content/drive/MyDrive/DeepFakeDetection/video/real/"
+real_map_dir = "/content/drive/MyDrive/DeepFakeDetection/map/real/"
+resize_dir = '/content/drive/MyDrive/DeepFakeDetection/resize/'
+model_path = "/content/drive/MyDrive/DeepFakeDetection/MesoInception_F2F.h5"
+save_path = "/content/drive/MyDrive/DeepFakeDetection/"
+
+classifier = MesoInception4()
+classifier.load(model_path)
+
 real_vid_list = os.listdir(real_video_dir)
 real_vid_list.sort()
 real_vid_dict = {x:real_video_dir + x for x in real_vid_list}
-fake_video_dir = "/content/drive/MyDrive/DeepFakeDetection/video/fake/"
 fake_vid_list = os.listdir(fake_video_dir)
 fake_vid_list.sort()
 fake_vid_dict = {x:fake_video_dir + x for x in fake_vid_list}
 video_dict = real_vid_dict
 video_dict.update(fake_vid_dict)
 
-fake_mit_dir = "/content/drive/MyDrive/DeepFakeDetection/video/fake/"
-fake_map_dir = "/content/drive/MyDrive/DeepFakeDetection/map/fake/"
 fake_mit_list = os.listdir(fake_mit_dir)
 fake_mit_list.sort()
 fake_mit_dict = {x:fake_map_dir + x + '.npy' for x in fake_mit_list}
-real_mit_dir = "/content/drive/MyDrive/DeepFakeDetection/video/real/"
-real_map_dir = "/content/drive/MyDrive/DeepFakeDetection/map/real/"
 real_mit_list = os.listdir(real_mit_dir)
 real_mit_list.sort()
 real_mit_dict = {x:real_map_dir + x + '.npy' for x in real_mit_list}
@@ -44,7 +48,7 @@ for vid_name in data_name_list:
           video_dir_name = 'fake/'
         if vid_name in real_mit_dict:
           video_dir_name = 'real/'
-        meta_dir = '/content/drive/MyDrive/DeepFakeDetection/resize/' + video_dir_name
+        meta_dir = resize_dir + video_dir_name
         vid_path = meta_dir + vid_name[:-4]
         print(vid_path)
         img_list = os.listdir(vid_path)
@@ -81,7 +85,6 @@ for vid_name in data_name_list:
     print("  ", np.shape(data_y_set))
     print("  ", np.shape(data_name_set))
 
-save_path = "/content/drive/MyDrive/DeepFakeDetection/"
 np.save(save_path+"Meso.npy", data_Meso_set)
 np.save(save_path+"mit.npy", data_mit_set)
 np.save(save_path+"y.npy", data_y_set)
