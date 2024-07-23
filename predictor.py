@@ -131,11 +131,11 @@ def clean_temp():
         shutil.rmtree(meta_dir)
     if os.path.isdir(resize_dir):
         shutil.rmtree(resize_dir)
-    if os.path.ispath(newviddir):
+    if os.path.exists(newviddir):
         os.remove(newviddir) 
-    if os.path.ispath(mag_path):
+    if os.path.exists(mag_path):
         os.remove(mag_path)
-    if os.path.ispath(map_path):
+    if os.path.exists(map_path):
         os.remove(map_path) 
         
 def run() -> int:
