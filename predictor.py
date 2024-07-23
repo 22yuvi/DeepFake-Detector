@@ -25,6 +25,8 @@ newviddir = os.path.join(working_dir, "video.avi")
 mag_path = os.path.join(working_dir, "magnified_video.avi")
 map_path = os.path.join(working_dir, "map")
 model_path = os.path.join(working_dir, "model")
+model_name = 'model_Meso_96.h5'
+loadModel = os.path.join(model_path, model_name)
 predictor_name = 'shape_predictor_81_face_landmarks.dat'
 predictor_path = os.path.join(working_dir, predictor_name)
 mesoIncep_name = 'MesoInception_F2F.h5'
@@ -170,7 +172,7 @@ def run() -> int:
         data_mit = np.expand_dims(data_mit, axis=0)
         data_Meso = np.expand_dims(data_Meso, axis=0)
     with st.spinner('Predicting.....'):
-        model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
+        model = load_model(loadModel, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
         prediction = model.predict([data_mit, data_Meso])
     video_file = open(mag_path, 'rb')
     video_bytes = video_file.read()    
