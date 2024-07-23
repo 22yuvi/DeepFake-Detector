@@ -7,6 +7,7 @@ import cv2
 import torch
 import time
 import streamlit as st
+import shutil
 import urllib
 from typing import List, Optional
 from tqdm import tqdm
@@ -123,6 +124,18 @@ def generate_mmst_map(mag_path, map_path):
     full_st_map = normalization(full_st_map)
     np.save(map_path + ".npy", full_st_map)
 
+def clean_temp():
+    if os.path.isdir(meta_dir):
+        shutil.rmtree(meta_dir)
+    if os.path.isdir(resize_dir):
+        shutil.rmtree(resize_dir)
+    if os.path.ispath(newviddir):
+        os.remove(newviddir) 
+    if os.path.ispath(mag_path):
+        os.remove(mag_path)
+    if os.path.ispath(map_path):
+        os.remove(map_path) 
+        
 def run() -> int:
     with st.spinner('Preprocessing......'):
         conditional_download(model_path, ['https://github.com/22yuvi/DeepFace-Detector/releases/download/v0.2.0-alpha/model_Meso_96.h5'])
@@ -156,8 +169,12 @@ def run() -> int:
         data_mit = np.load(map_path + ".npy")
         data_mit = np.expand_dims(data_mit, axis=0)
         data_Meso = np.expand_dims(data_Meso, axis=0)
-
     with st.spinner('Predicting.....'):
         model = load_model(model_path, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
         prediction = model.predict([data_mit, data_Meso])
+    video_file = open(mag_path, 'rb')
+    video_bytes = video_file.read()    
+    st.video(video_bytes)
+    with st.spinner('Cleaning_temp_files......'):
+        clean_temp()
     return prediction
