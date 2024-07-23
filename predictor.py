@@ -135,8 +135,8 @@ def clean_temp():
         os.remove(newviddir) 
     if os.path.exists(mag_path):
         os.remove(mag_path)
-    if os.path.exists(map_path):
-        os.remove(map_path) 
+    if os.path.exists(map_path + ".npy"):
+        os.remove(map_path + ".npy") 
         
 def run() -> int:
     with st.spinner('Preprocessing......'):
