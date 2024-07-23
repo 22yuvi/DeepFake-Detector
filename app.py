@@ -103,7 +103,7 @@ if st.button("Predict"):
         if(pred == -1):
             st.write('Prediction Failed')
         elif(pred > 0.5 ):
-            st.write('Fake')
+            st.write(f'Fake with accuracy : {}', pred*100)
         else:
-            st.write('Real')
+            st.write(f'Real with accuracy : {}', 100-pred*100)
             
