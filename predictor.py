@@ -179,4 +179,4 @@ def run() -> int:
     st.video(video_bytes)
     with st.spinner('Cleaning_temp_files......'):
         clean_temp()
-    return prediction
+    return prediction[0][0]
