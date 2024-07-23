@@ -95,15 +95,11 @@ if st.button("Predict"):
                     break
             out.release()
             pred = run()
-            mag_path = os.path.join(working_dir, "magnified_video.avi")
-            video_file = open(mag_path, 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
             video.release()
         if(pred == -1):
             st.write('Prediction Failed')
         elif(pred > 0.5 ):
-            st.write(f'Fake with accuracy : {}', pred*100)
+            st.write(f'Fake with accuracy : {pred*100}')
         else:
-            st.write(f'Real with accuracy : {}', 100-pred*100)
+            st.write(f'Real with accuracy : {100-pred*100}')
             
