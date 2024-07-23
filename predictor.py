@@ -125,7 +125,7 @@ def generate_mmst_map(mag_path, map_path):
 
 def run() -> int:
     with st.spinner('Preprocessing......'):
-        conditional_download(model_path, ['https://github.com/22yuvi/DeepFace-Detector/releases/download/v0.2.0-alpha/model_Meso.h5'])
+        conditional_download(model_path, ['https://github.com/22yuvi/DeepFace-Detector/releases/download/v0.2.0-alpha/model_Meso_96.h5'])
     with st.spinner('Creating MMST Map......'):
         generate_align_face(dataset_dir, meta_dir)
         resize_frame(meta_dir, resize_dir)
