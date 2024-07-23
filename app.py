@@ -96,6 +96,7 @@ if st.button("Predict"):
             out.release()
             pred = run()
             video.release()
+        st.write(pred)
         if(pred == -1):
             st.write('Prediction Failed')
         elif(pred > 0.5 ):
