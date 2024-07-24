@@ -140,6 +140,7 @@ def clean_temp():
         
 def run() -> int:
     with st.spinner('Preprocessing......'):
+        clean_temp()
         conditional_download(model_path, ['https://github.com/22yuvi/DeepFace-Detector/releases/download/v0.2.0-alpha/model_Meso_96.h5'])
     with st.spinner('Creating MMST Map......'):
         generate_align_face(dataset_dir, meta_dir)
@@ -174,9 +175,6 @@ def run() -> int:
     with st.spinner('Predicting.....'):
         model = load_model(loadModel, custom_objects={'multiply':multiply, 'Add':Add, 'X_plus_Layer':X_plus_Layer, 'AttentionMapLayer': AttentionMapLayer})
         prediction = model.predict([data_mit, data_Meso])
-    video_file = open(mag_path, 'rb')
-    video_bytes = video_file.read()    
-    st.video(video_bytes)
     with st.spinner('Cleaning_temp_files......'):
         clean_temp()
     return prediction[0][0]
