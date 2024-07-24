@@ -80,7 +80,7 @@ if st.button("Predict"):
                 st.video(temp_file.name)
     if uploaded_file is not None or link is not None:
         with col2:
-            st.markdown('<p style="text-align: center;">Magnified Video</p>', unsafe_allow_html=True)
+            st.markdown('<p style="text-align: center;">Status</p>', unsafe_allow_html=True)
             total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
             fps = video.get(cv2.CAP_PROP_FPS)
             width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -96,11 +96,10 @@ if st.button("Predict"):
             out.release()
             pred = run()
             video.release()
-        st.write(pred)
         if(pred == -1):
-            st.write('Prediction Failed')
+            st.warning('Prediction Failed')
         elif(pred > 0.5 ):
-            st.write(f'Fake with accuracy : {pred*100}')
+            st.error(f'Fake with probability : {pred*100}')
         else:
-            st.write(f'Real with accuracy : {100-pred*100}')
+            st.success(f'Real with probability : {100-pred*100}')
             
