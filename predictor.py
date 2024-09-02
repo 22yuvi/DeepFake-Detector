@@ -141,7 +141,7 @@ def clean_temp():
 def run() -> int:
     with st.spinner('Preprocessing......'):
         clean_temp()
-        conditional_download(model_path, ['https://github.com/22yuvi/DeepFake-Detector/releases/download/v0.2.0-alpha/model_Meso_96.h5'])
+        conditional_download(model_path, ['https://github.com/22yuvi/DeepFake-Detector/releases/tag/v0.2.0-alpha/model_Meso_96.h5'])
     with st.spinner('Creating MMST Map......'):
         generate_align_face(dataset_dir, meta_dir)
         resize_frame(meta_dir, resize_dir)
