@@ -123,7 +123,6 @@ def generate_mmst_map(mag_path, map_path):
         frame_seg = get_frame_seg(frame, ROI_h, ROI_w)
         full_st_map[idx] = frame_seg
         idx += 1
-    full_st_map = normalization(full_st_map)
     np.save(map_path + ".npy", full_st_map)
 
 def clean_temp():
