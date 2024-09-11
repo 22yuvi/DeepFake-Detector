@@ -138,7 +138,7 @@ class AttentionMapLayer(Layer):
         for i in range(300):
             for j in [3, 8, 12, 14, 17, 19]:
                 roi_map_value[0, i, j] = 1
-        self.roi_map = K.variable(roi_map_value)
+                self.roi_map = tf.Variable(roi_map_value, dtype=tf.float32)
 
     def call(self, inputs):
         s_o, t_o, ipt = inputs
@@ -147,30 +147,31 @@ class AttentionMapLayer(Layer):
         width = 25
 
         ''' adaptive spatial attention '''
-        s_o = K.l2_normalize(s_o, axis=1)
-        s_map = K.expand_dims(s_o, axis=1)
-        s_o = K.expand_dims(s_o, axis=1)
+        s_o = tf.math.l2_normalize(s_o, axis=1)
+        s_map = tf.expand_dims(s_o, axis=1)
+        s_o = tf.expand_dims(s_o, axis=1)
         for h in range(height-1):
-            s_map = K.concatenate([s_map, s_o], axis=1)
+            s_map = tf.concat([s_map, s_o], axis=1)
 
         ''' frame-level temporal attention '''
-        t_o = K.l2_normalize(t_o, axis=1)
-        t_map = K.expand_dims(t_o, axis=2)
-        t_o = K.expand_dims(t_o, axis=2)
+        t_o = tf.math.l2_normalize(t_o, axis=1)
+        t_map = tf.expand_dims(t_o, axis=2)
+        t_o = tf.expand_dims(t_o, axis=2)
         for w in range(width-1):
-            t_map = K.concatenate([t_map, t_o], axis=2)
+            t_map = tf.concat([t_map, t_o], axis=2)
 
         ''' Prior Spatial Attention '''
         a_o = multiply([s_map, t_map])
         a_o = Add()([a_o, self.roi_map])
 
-        a_map = K.expand_dims(a_o, axis=3)
-        a_o = K.expand_dims(a_o, axis=3)
-        for c in range(self.channels-1):
-            a_map = K.concatenate([a_map, a_o], axis=3)
+        a_map = tf.expand_dims(a_o, axis=3)
+        a_o = tf.expand_dims(a_o, axis=3)
+        for c in range(self.channels - 1):
+            a_map = tf.concat([a_map, a_o], axis=3)
 
         out = multiply([a_map, ipt])
         return out
+
 
     def compute_output_shape(self, input_shape):
         return input_shape[2]
